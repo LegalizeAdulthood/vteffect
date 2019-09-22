@@ -240,8 +240,6 @@ L760:
 
 L790:
     visited[r-1][s] = true;
-
-L800:
     ++c;
     neighbours[r-1][s] = 2;
     --r;
