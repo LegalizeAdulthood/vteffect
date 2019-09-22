@@ -1,9 +1,9 @@
 This repository contains code for generating various
 animation effects as VT100 escape sequences.  The code
 currently consists of three utilities:
-* scat, a slow cat program that simulate output at a specific baud rate
-* vtdump, a utility to dump escape sequences as text
-* vteffect, a program for generating VT100 animation effects
+* `scat`, a slow cat program that simulate output at a specific baud rate
+* `vtdump`, a utility to dump escape sequences as text
+* `vteffect`, a program for generating VT100 animation effects
 
 # scat
 
@@ -14,7 +14,7 @@ machine.
 
 Usage:
 
-scat baud [file]
+`scat` *baud* [*file*]
 
 The baud rate parameter is required and can be any number.
 The program computes a delay between characters in order to
@@ -26,10 +26,17 @@ will be displayed.  If omitted, standard input is printed.
 # vtdump
 
 Vtdump is a program that reads a series of escape sequences
-and emits a seris of commands, one per line, that describe
-the escape sequences.  The input file is decomposed into
-commands.  A command is either a control sequence, VT100
-escape sequence or literal text.
+and emits a series of commands, one per line, that describe
+the escape sequences.
+
+Usage:
+
+`vtdump` [*file*]
+
+The *file* argument is optional and standard input is used
+if it is omitted.  The input file is decomposed into commands.
+A command is either a control sequence, VT100 escape sequence
+or literal text.
 
 A control sequence command is displayed by the mnemonic name
 of the control character, e.g. bs for backspace.  Control sequence
@@ -53,7 +60,8 @@ that are not escaped in any way.
 Vteffect generates animated effects as VT100 escape sequences.
 
 Usage:
-vteffect [*options*] *effect*
+
+`vteffect` [*options*] *effect*
 
 *options* may be one one or more of the following options:
 * `-l` *top*,*bottom* -- specifies the top and bottom lines
