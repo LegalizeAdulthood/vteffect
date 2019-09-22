@@ -1,8 +1,9 @@
 This repository contains code for generating various
 animation effects as VT100 escape sequences.  The code
-currently consists of three utilities:
+currently consists of four utilities:
 * `scat`, a slow cat program that simulate output at a specific baud rate
-* `vtdump`, a utility to dump escape sequences as text
+* `vtdump`, a utility to dump escape sequences as text commands
+* `vtasm`, a utility to assemble text commands into escape sequences
 * `vteffect`, a program for generating VT100 animation effects
 
 # scat
@@ -54,6 +55,21 @@ double quote.  The text between the quotes is what is contained
 in the input.  Note that the quotes are simply delimiting
 characters and the literal text may contain double quote characters
 that are not escaped in any way.
+
+# vtasm
+
+Vtasm is a program that reads a series of text commands, one per line,
+and emits the corresponding escape sequences.  The input format is
+that output by `vtdump`.  `vtasm` recovers the original escape sequence
+input from the output produced by `vtdump`
+
+Usage:
+
+`vtasm` [*file*]
+
+The *file* argument is optional and standard input is used
+if it is omitted.  The escape sequence corresponding to the input
+command sequence is written to standard output.
 
 # vteffect
 
