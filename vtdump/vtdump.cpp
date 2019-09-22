@@ -188,11 +188,11 @@ void dumper::dump_esc()
     switch (c)
     {
     case '(':
-        std::cout << "scs g0," << get() << '\n';
+        std::cout << "scsg0 \"" << get() << "\"\n";
         return;
 
     case ')':
-        std::cout << "scs g1," << get() << '\n';
+        std::cout << "scsg1 \"" << get() << "\"\n";
         return;
 
     case '#':
@@ -236,7 +236,7 @@ void dumper::dump_esc()
         { 'E', "nel" },
         { 'H', "hts" },
         { 'M', "ri" },
-        { 'z', "decid" },
+        { 'Z', "decid" },
         { 'c', "ris" }
     };
     for (const auto &entry : mnemonics)
