@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstdio>
 #include <iostream>
+#include <random>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -195,7 +196,9 @@ public:
 void random_wiper::play()
 {
     std::vector<coord> locs = limit_coords();
-    std::random_shuffle(locs.begin(), locs.end());
+    std::random_device dev;
+    std::mt19937 generator(dev());
+    std::shuffle(locs.begin(), locs.end(), generator);
 
     for (const coord &c : locs)
     {

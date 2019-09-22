@@ -1,0 +1,5 @@
+include(CheckIncludeFile)
+check_include_file(unistd.h HAVE_UNISTD_H)
+configure_file(port.h.in port.h)
+add_executable(scat scat.c port.h.in ${CMAKE_CURRENT_BINARY_DIR}/port.h)
+target_include_directories(scat PUBLIC ${CMAKE_CURRENT_BINARY_DIR})

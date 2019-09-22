@@ -1,6 +1,8 @@
 #include <cassert>
+#include <cctype>
 #include <iomanip>
 #include <iostream>
+#include <string>
 
 namespace {
 

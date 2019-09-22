@@ -1,0 +1,12 @@
+#pragma once
+
+/* Define to 1 if you have <unistd.h> */
+#cmakedefine HAVE_UNISTD_H 1
+
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#else
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#define usleep(ms_) Sleep(ms_)
+#endif

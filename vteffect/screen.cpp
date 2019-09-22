@@ -20,12 +20,12 @@ screen::screen(const std::string &filename)
 
 char screen::at(const coord &c) const
 {
-    if (c.row > m_lines.size())
+    if (c.row > static_cast<int>(m_lines.size()))
     {
         return ' ';
     }
 
-    if (c.col > m_lines[c.row - 1].length())
+    if (c.col > static_cast<int>(m_lines[c.row - 1].length()))
     {
         return ' ';
     }

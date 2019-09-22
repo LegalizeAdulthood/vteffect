@@ -10,7 +10,8 @@ void erase_in_line(const options &)
 {
     for (int row = 1; row <= 24; ++row)
     {
-        int col = (40-12) + (40-12)*std::sin(row*2.0*M_PI/24);
+        static const float pi = acos(-1.0f);
+        int col = static_cast<int>((40-12) + (40-12)*std::sin(row*2.0*pi/24));
         std::printf("\033[%d;%dH\033[1K\033[24C\033[K", row, col);
     }
 }

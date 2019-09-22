@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.12.0)
+project(vteffect C CXX)
+add_subdirectory(scat)
+add_subdirectory(vtdump)
+add_subdirectory(vteffect)
