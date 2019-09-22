@@ -8,7 +8,7 @@
  *
  * Example: scat 9600 twilight.vt
  *
- * Compile: gcc -O2 -o scat scat.c -lncurses
+ * Compile: gcc -O2 -o scat scat.c
  */
 #define US_PER_SECOND 1000000
 
