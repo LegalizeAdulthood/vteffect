@@ -6,9 +6,11 @@
 
 #include "vtasm.h"
 
-namespace {
+namespace
+{
 
-struct mnemonic {
+struct mnemonic
+{
     char prefix;
     const char *mnemonic;
 };
@@ -61,7 +63,7 @@ void assembler::assemble_string(const std::string &line)
         return;
     }
 
-    std::cout << line.substr(2, line.size()-2);
+    std::cout << line.substr(1, line.size()-2);
 }
 
 void assembler::assemble(const std::string &line)
@@ -127,7 +129,8 @@ void assembler::assemble_esc(const std::string &command, const std::string &args
         }
     }
 
-    static const mnemonic csi_commands[] = {
+    static const mnemonic csi_commands[] =
+    {
         { 'A', "cuu" },
         { 'B', "cud" },
         { 'C', "cuf" },
@@ -152,7 +155,7 @@ void assembler::assemble_esc(const std::string &command, const std::string &args
     {
         if (command == entry.mnemonic)
         {
-            std::cout << '\033[' << args << entry.prefix;
+            std::cout << "\033[" << args << entry.prefix;
             return;
         }
     }
@@ -166,7 +169,7 @@ void assembler::assemble_control(const std::string &line)
     std::string args;
     if (auto pos = line.find(' '); pos != std::string::npos)
     {
-        command = line.substr(0, pos-1);
+        command = line.substr(0, pos);
         args = line.substr(pos + 1);
         args = args.substr(1, args.size()-2);
     }
@@ -175,7 +178,7 @@ void assembler::assemble_control(const std::string &line)
         command = line;
     }
 
-    const mnemonic mnemonics[] =
+    static const mnemonic mnemonics[] =
     {
         { '\000', "nul" }, { '\001', "soh" }, { '\002', "stx" }, { '\003', "etx" },
         { '\004', "eot" }, { '\005', "enq" }, { '\006', "ack" }, { '\007', "bel" },
