@@ -4,9 +4,11 @@
 #include <iostream>
 #include <string>
 
-namespace {
+namespace
+{
 
-struct mnemonic {
+struct mnemonic
+{
     char prefix;
     const char *mnemonic;
 };
@@ -112,7 +114,8 @@ void dumper::dump_csi_function(const std::string &args, char function)
         assert(false);
     }
 
-    mnemonic mnemonics[] = {
+    static const mnemonic mnemonics[] =
+    {
         { 'A', "cuu" },
         { 'B', "cud" },
         { 'C', "cuf" },
@@ -197,7 +200,8 @@ void dumper::dump_esc()
 
     case '#':
         {
-            mnemonic mnemonics[] = {
+            static const mnemonic mnemonics[] =
+            {
                 { '3', "decdhltop" },
                 { '4', "decdhlbot" },
                 { '5', "decswl" },
@@ -225,7 +229,8 @@ void dumper::dump_esc()
         return;
     }
 
-    mnemonic mnemonics[] = {
+    static const mnemonic mnemonics[] =
+    {
         { '1', "decgon" },
         { '2', "decgoff" },
         { '7', "decsc" },
@@ -260,13 +265,14 @@ void dumper::dump_control(char c)
         return;
     }
 
-    const char *mnemonics[] = {
+    static const char *const mnemonics[] =
+    {
         "nul", "soh", "stx", "etx", "eot", "enq", "ack", "bel",
         "bs", "ht", "lf", "vt", "ff", "cr", "so", "si",
         "dle", "dc1", "dc2", "dc3", "dc4", "naq", "syn", "etb",
         "can", "em", "sub", "esc", "is4", "is3", "is2", "is1"
     };
-    if (c < 32)
+    if (c >= 0 && c < 32)
     {
         std::cout << mnemonics[static_cast<int>(c)] << '\n';
         return;
@@ -279,8 +285,7 @@ void dumper::dump_control(char c)
     }
 
     assert(c < 0);
-    std::cout << "\\0x" << std::setw(2) << std::hex
-        << static_cast<unsigned char>(c) << '\n';
+    std::cout << '"' << c << "\"\n";
 }
 
 } // namespace
