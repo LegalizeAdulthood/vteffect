@@ -1,10 +1,13 @@
 #include "effect.h"
 
+#include <stdout_control.h>
+
 #include <iostream>
 #include <stdexcept>
 
 int main(int argc, char *argv[])
 {
+    set_binary_stdout();
     try
     {
         options opts(argc, argv);
