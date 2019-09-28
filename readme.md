@@ -6,6 +6,12 @@ currently consists of four utilities:
 * `vtasm`, a utility to assemble text commands into escape sequences
 * `vteffect`, a program for generating VT100 animation effects
 
+# Building
+
+To build the code, you will need a CMake 3.12 or later and
+a modern C++ compiler that supports C++17.  Use CMake to generate
+a build script for your platform and then build normally from there.
+
 # scat
 
 Scat is a slow cat program designed to allow you to play
