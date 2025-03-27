@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
 {
     int baud = 0;
     int delayPerChunk = 0;
+    char *filename = NULL;
     FILE *f = NULL;
     int chunkSize = 1;
     int charCount = 0;
@@ -33,6 +34,17 @@ int main(int argc, char *argv[])
 	}
 
 	baud = atoi(argv[1]);
+	if (baud == 0)
+	{
+	    baud = 9600;
+	    filename = argv[1];
+	}
+	else
+	{
+	    if (argc == 3) {
+		filename = argv[2];
+	    }
+	}
     }
 
     /* assume 10 bit frame for a character: 1 start, 8 data, 1 stop */
@@ -44,7 +56,7 @@ int main(int argc, char *argv[])
         delayPerChunk = US_PER_SECOND*chunkSize/(baud/10);
     }
 
-    f = (argc == 3) ? fopen(argv[2], "r") : stdin;
+    f = (filename != NULL) ? fopen(filename, "r") : stdin;
     charCount = 0;
     {
         int c;
@@ -59,6 +71,6 @@ int main(int argc, char *argv[])
         }
     }
     fflush(stdout);
-
+    
     return 0;
 }
