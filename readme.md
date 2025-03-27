@@ -11,6 +11,7 @@ currently consists of four utilities:
 To build the code, you will need a CMake 3.12 or later and
 a modern C++ compiler that supports C++17.  Use CMake to generate
 a build script for your platform and then build normally from there.
+(E.g., `cmake . && make`).
 
 # scat
 
