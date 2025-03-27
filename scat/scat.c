@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "port.h"
 
 /* scat -- slow cat for playing back ESC animations
@@ -20,11 +21,20 @@ int main(int argc, char *argv[])
     int chunkSize = 1;
     int charCount = 0;
 
-    if (argc < 1)
+    if (argc == 1)
+	baud = 9600;
+    else
     {
-        return 1;
+	if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))
+	{
+	    fprintf(stderr, "Usage:  scat [baud] [filename]\n");
+	    fprintf(stderr, "        Default: baud=9600, filename=stdin\n");
+	    return 1;
+	}
+
+	baud = atoi(argv[1]);
     }
-    baud = atoi(argv[1]);
+
     /* assume 10 bit frame for a character: 1 start, 8 data, 1 stop */
     delayPerChunk = US_PER_SECOND*chunkSize/(baud/10);
     while (delayPerChunk < 100)
