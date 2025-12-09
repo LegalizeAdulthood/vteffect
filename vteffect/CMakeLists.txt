@@ -18,4 +18,4 @@ add_executable(vteffect
     wipe.cpp
 )
 target_link_libraries(vteffect stdout_control)
-set_property(TARGET vteffect PROPERTY CXX_STANDARD 17)
+target_folder(vteffect "Tools")

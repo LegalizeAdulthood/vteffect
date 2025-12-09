@@ -1,0 +1,66 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "sibling-build-preset",
+      "hidden": true,
+      "description": "Use a sibling directory for the build based on the preset name",
+      "binaryDir": "${sourceDir}/../build-${sourceDirName}-${presetName}"
+    },
+    {
+      "name": "project-name",
+      "hidden": true,
+      "description": "Set the project name from the preset name",
+      "cacheVariables": {
+        "VTEFFECT_PROJECT_NAME": "VT Effect ${presetName}"
+      }
+    },
+    {
+      "name": "default",
+      "displayName": "Configure with default settings",
+      "inherits": [ "sibling-build-preset", "project-name" ]
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "default",
+      "displayName": "Build with default settings",
+      "configurePreset": "default"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "default",
+      "displayName": "Test with default settings",
+      "configurePreset": "default",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "default",
+      "displayName": "Workflow with default settings: configure, build and test",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "default"
+        },
+        {
+          "type": "build",
+          "name": "default"
+        },
+        {
+          "type": "test",
+          "name": "default"
+        }
+      ]
+    }
+  ]
+}

@@ -3,3 +3,4 @@ add_executable(vtdump
     main.cpp
     vtdump.cpp
 )
+target_folder(vtdump "Tools")
