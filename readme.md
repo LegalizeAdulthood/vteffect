@@ -21,7 +21,9 @@ machine.
 
 Usage:
 
-`scat` *baud* [*file*]
+`scat` [`--listen` *port* | `--connect` *host* *port*]
+[`--start-delay` *seconds*] [`--xoff-timeout-ms` *milliseconds*]
+[`--delay-nuls`] [`--hold-open`] *baud* [*file*]
 
 The baud rate parameter is required and can be any number.
 The program computes a delay between characters in order to
@@ -29,6 +31,27 @@ simulate the requested baud rate.
 
 The optional file argument consists of the single file that
 will be displayed.  If omitted, standard input is printed.
+
+The optional start delay waits the specified number of seconds
+after the socket connection is established before sending bytes.
+
+The optional XOFF timeout bounds how long socket playback waits
+for an XON after receiving XOFF.  A timeout of zero waits without
+limit.
+
+The optional `--delay-nuls` argument treats NUL bytes as timing
+padding instead of transmitting them.  They still consume playback
+time according to the requested baud rate.
+
+The optional `--hold-open` argument keeps a socket connection open
+after file playback finishes, until the peer closes the connection.
+
+With `--listen`, `scat` waits for one raw TCP connection on
+`127.0.0.1` and writes the byte stream to that connection instead
+of standard output.  With `--connect`, `scat` opens a raw TCP
+connection to the named host and port.  Bytes received from the
+connection are treated as XON/XOFF flow control: `DC3` pauses
+playback and `DC1` resumes playback.
 
 # vtdump
 

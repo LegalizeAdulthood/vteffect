@@ -8,5 +8,8 @@
 #else
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#define usleep(ms_) Sleep(ms_)
+static void usleep(unsigned int us_)
+{
+    Sleep((us_ + 999) / 1000);
+}
 #endif
