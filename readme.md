@@ -22,8 +22,7 @@ machine.
 Usage:
 
 `scat` [`--listen` *port* | `--connect` *host* *port*]
-[`--start-delay` *seconds*] [`--xoff-timeout-ms` *milliseconds*]
-[`--delay-nuls`] [`--hold-open`] *baud* [*file*]
+[`--start-delay` *seconds*] [`--hold-open`] *baud* [*file*]
 
 The baud rate parameter is required and can be any number.
 The program computes a delay between characters in order to
@@ -34,14 +33,6 @@ will be displayed.  If omitted, standard input is printed.
 
 The optional start delay waits the specified number of seconds
 after the socket connection is established before sending bytes.
-
-The optional XOFF timeout bounds how long socket playback waits
-for an XON after receiving XOFF.  A timeout of zero waits without
-limit.
-
-The optional `--delay-nuls` argument treats NUL bytes as timing
-padding instead of transmitting them.  They still consume playback
-time according to the requested baud rate.
 
 The optional `--hold-open` argument keeps a socket connection open
 after file playback finishes, until the peer closes the connection.

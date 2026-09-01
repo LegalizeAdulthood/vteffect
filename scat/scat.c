@@ -51,8 +51,7 @@ static void usage(void)
 {
     fprintf(stderr,
             "Usage: scat [--listen port|--connect host port] "
-            "[--start-delay seconds] [--xoff-timeout-ms milliseconds] "
-            "[--delay-nuls] [--hold-open] <baud> [file]\n");
+            "[--start-delay seconds] [--hold-open] <baud> [file]\n");
 }
 
 static int parse_baud(const char *arg)
@@ -82,24 +81,6 @@ static int parse_start_delay(const char *arg, int *start_delay)
         return 1;
     }
     *start_delay = (int) delay;
-    return 0;
-}
-
-static int parse_timeout_ms(const char *arg, int *timeout_us)
-{
-    char *end = NULL;
-    long timeout_ms = strtol(arg, &end, 10);
-    if (*arg == '\0' || *end != '\0' || timeout_ms < 0)
-    {
-        fprintf(stderr, "Invalid XOFF timeout: %s\n", arg);
-        return 1;
-    }
-    if (timeout_ms > INT_MAX / 1000)
-    {
-        fprintf(stderr, "XOFF timeout is too large: %s\n", arg);
-        return 1;
-    }
-    *timeout_us = (int) timeout_ms * 1000;
     return 0;
 }
 
@@ -337,27 +318,13 @@ static int receive_socket_byte(socket_handle socket, unsigned char *byte)
     return -1;
 }
 
-static int apply_flow_control(socket_handle socket, int *paused, int xoff_timeout_us)
+static int apply_flow_control(socket_handle socket, int *paused)
 {
     for (;;)
     {
         unsigned char byte = 0;
-        int ready = 0;
+        int ready = socket_readable(socket, *paused);
         int received = 0;
-
-        if (*paused && xoff_timeout_us > 0)
-        {
-            ready = socket_readable_for(socket, xoff_timeout_us);
-            if (ready == 0)
-            {
-                *paused = 0;
-                return 0;
-            }
-        }
-        else
-        {
-            ready = socket_readable(socket, *paused);
-        }
 
         if (ready <= 0)
         {
@@ -485,8 +452,7 @@ static int delay_output(struct output *output, int *paused, int delay_us)
     return poll_flow_control(output->socket, paused);
 }
 
-static int send_file(FILE *file, struct output *output, int baud, int delay_nuls,
-    int xoff_timeout_us)
+static int send_file(FILE *file, struct output *output, int baud)
 {
     int chunk_size = 1;
     int delay_per_chunk = 0;
@@ -500,28 +466,21 @@ static int send_file(FILE *file, struct output *output, int baud, int delay_nuls
     ch = fgetc(file);
     while (ch != EOF)
     {
-        int sending_byte = !(delay_nuls && ch == 0);
         next_ch = fgetc(file);
-        if (sending_byte && output->network &&
-            apply_flow_control(output->socket, &paused, xoff_timeout_us) < 0)
+        if (output->network &&
+            apply_flow_control(output->socket, &paused) < 0)
         {
             return 1;
         }
 
-        if (sending_byte && write_byte(output, (unsigned char) ch) != 0)
+        if (write_byte(output, (unsigned char) ch) != 0)
         {
             return 1;
         }
-        if (sending_byte && next_ch != EOF && output->network)
+        if (next_ch != EOF && output->network &&
+            apply_flow_control(output->socket, &paused) < 0)
         {
-            int next_sends_byte = !(delay_nuls && next_ch == 0);
-            int flow_result = next_sends_byte ?
-                apply_flow_control(output->socket, &paused, xoff_timeout_us) :
-                poll_flow_control(output->socket, &paused);
-            if (flow_result < 0)
-            {
-                return 1;
-            }
+            return 1;
         }
 
         ++char_count;
@@ -531,11 +490,7 @@ static int send_file(FILE *file, struct output *output, int baud, int delay_nuls
             {
                 return 1;
             }
-            if (!sending_byte)
-            {
-                usleep(delay_per_chunk);
-            }
-            else if (delay_output(output, &paused, delay_per_chunk) < 0)
+            if (delay_output(output, &paused, delay_per_chunk) < 0)
             {
                 return 1;
             }
@@ -594,8 +549,6 @@ int main(int argc, char *argv[])
     const char *file_name = NULL;
     int arg = 1;
     int start_delay = 0;
-    int xoff_timeout_us = 0;
-    int delay_nuls = 0;
     int hold_open = 0;
     int baud = 0;
     FILE *file = stdin;
@@ -637,20 +590,6 @@ int main(int argc, char *argv[])
                 return 1;
             }
             arg += 2;
-        }
-        else if (strcmp(argv[arg], "--xoff-timeout-ms") == 0)
-        {
-            if (arg + 1 >= argc || parse_timeout_ms(argv[arg + 1], &xoff_timeout_us))
-            {
-                usage();
-                return 1;
-            }
-            arg += 2;
-        }
-        else if (strcmp(argv[arg], "--delay-nuls") == 0)
-        {
-            delay_nuls = 1;
-            ++arg;
         }
         else if (strcmp(argv[arg], "--hold-open") == 0)
         {
@@ -724,7 +663,7 @@ int main(int argc, char *argv[])
         usleep(start_delay * US_PER_SECOND);
     }
 
-    result = send_file(file, &output, baud, delay_nuls, xoff_timeout_us);
+    result = send_file(file, &output, baud);
     if (result == 0 && output.network && hold_open)
     {
         result = hold_socket_open(output.socket);
