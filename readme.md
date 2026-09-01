@@ -71,11 +71,14 @@ input from the output produced by `vtdump`
 
 Usage:
 
-`vtasm` [*file*]
+`vtasm` [*options*] [*file*]
+
+*options* may be one or more of the following options:
+* `-o` *file*, `--output` *file* -- writes escape sequences to the named file
 
 The *file* argument is optional and standard input is used
 if it is omitted.  The escape sequence corresponding to the input
-command sequence is written to standard output.
+command sequence is written to standard output unless `-o` is used.
 
 # vteffect
 
